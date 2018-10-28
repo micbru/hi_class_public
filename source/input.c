@@ -695,6 +695,7 @@ int input_read_parameters(
     flag1 = _TRUE_;
     flag2 = _FALSE_;
   }
+
   /* end of lines for deprecated syntax */
 
   /* (b) try to read Omega_ur */
@@ -1068,6 +1069,14 @@ int input_read_parameters(
 	class_read_list_of_doubles("parameters_smg",pba->parameters_2_smg,pba->parameters_2_size_smg);
       }
 
+      if (strcmp(string1,"no_slip") == 0) {
+	  pba->gravity_model_smg = no_slip;
+	  pba->field_evolution_smg = _FALSE_;
+	  pba->M_pl_evolution_smg = _TRUE_;
+	  flag2=_TRUE_;
+	  pba->parameters_2_size_smg = 5;
+	  class_read_list_of_doubles("parameters_smg",pba->parameters_2_smg,pba->parameters_2_size_smg);
+      }
 
       class_test(flag2==_FALSE_,
 		 errmsg,
@@ -2336,6 +2345,8 @@ int input_read_parameters(
     }
 
   }
+  /* (f.2) Lensing information (Add in A_lens) */
+  class_read_double("A_lens",ple->A_lens);
 
   /** (g) amount of information sent to standard output (none if all set to zero) */
 
@@ -3004,6 +3015,7 @@ int input_default_params(
   /** - lensing structure */
 
   ple->has_lensed_cls = _FALSE_;
+  ple->A_lens = 1.0;
 
   /** - nonlinear structure */
 
